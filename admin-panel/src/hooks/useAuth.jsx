@@ -1,17 +1,13 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext(null);
 const TOKEN_KEY = 'iptv_admin_token';
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(null);
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem(TOKEN_KEY);
-    if (storedToken) {
-      setToken(storedToken);
-    }
-  }, []);
+  // Initialize token synchronously from localStorage so a full page
+  // refresh preserves authentication state and avoids an immediate
+  // redirect to /login while React mounts.
+  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
 
   const login = (newToken) => {
     localStorage.setItem(TOKEN_KEY, newToken);
