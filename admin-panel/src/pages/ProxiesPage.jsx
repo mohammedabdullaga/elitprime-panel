@@ -71,7 +71,7 @@ function ProxiesPage() {
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-3xl border border-slate-700 bg-slate-900 shadow-soft">
+      <div className="overflow-x-auto rounded-3xl border border-slate-700 bg-slate-900 shadow-soft">
         <table className="min-w-full divide-y divide-slate-700 text-left">
           <thead className="bg-slate-950/80">
             <tr>
