@@ -71,8 +71,36 @@ function HostsPage() {
         </button>
       </div>
 
-      <div className="overflow-x-auto rounded-3xl border border-slate-700 bg-slate-900 shadow-soft">
-        <table className="min-w-full divide-y divide-slate-700 text-left">
+      <div className="rounded-3xl border border-slate-700 bg-slate-900 shadow-soft">
+        {/* Mobile stacked cards */}
+        <div className="md:hidden space-y-4 p-4">
+          {hosts.map((host) => (
+            <div key={host.id} className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="text-sm text-slate-400">URL</div>
+                  <div className="mt-1 text-sm text-slate-100 break-words">{host.url}</div>
+                  <div className="mt-2 text-sm text-slate-400">Status</div>
+                  <div className="mt-1 text-sm text-slate-100">{host.status}</div>
+                  <div className="mt-2 text-sm text-slate-400">Priority</div>
+                  <div className="mt-1 text-sm text-slate-100">{host.priority}</div>
+                </div>
+                <div className="ml-4 flex-shrink-0 flex flex-col gap-2">
+                  <button onClick={() => openEdit(host)} className="rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700">
+                    Edit
+                  </button>
+                  <button onClick={() => handleDelete(host.id)} className="rounded-xl bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-500">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-700 text-left">
           <thead className="bg-slate-950/80">
             <tr>
               <th className="px-6 py-4 text-sm font-semibold text-slate-300">URL</th>
@@ -108,7 +136,8 @@ function HostsPage() {
               ))
             )}
           </tbody>
-        </table>
+          </table>
+        </div>
       </div>
 
       <Modal isOpen={modalOpen} title={editId ? 'Edit Host' : 'Add Host'} onClose={() => setModalOpen(false)}>

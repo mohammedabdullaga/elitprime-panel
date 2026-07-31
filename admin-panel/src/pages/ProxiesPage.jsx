@@ -71,40 +71,65 @@ function ProxiesPage() {
         </button>
       </div>
 
-      <div className="overflow-x-auto rounded-3xl border border-slate-700 bg-slate-900 shadow-soft">
-        <table className="min-w-full divide-y divide-slate-700 text-left">
-          <thead className="bg-slate-950/80">
-            <tr>
-              <th className="px-6 py-4 text-sm font-semibold text-slate-300">Proxy Host</th>
-              <th className="px-6 py-4 text-sm font-semibold text-slate-300">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-800">
-            {loading ? (
+      <div className="rounded-3xl border border-slate-700 bg-slate-900 shadow-soft">
+        {/* Mobile stacked cards */}
+        <div className="md:hidden space-y-4 p-4">
+          {proxies.map((proxy) => (
+            <div key={proxy.id} className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="text-sm text-slate-400">Proxy Host</div>
+                  <div className="mt-1 text-sm text-slate-100 break-words">{proxy.host}</div>
+                </div>
+                <div className="ml-4 flex-shrink-0 flex flex-col gap-2">
+                  <button onClick={() => openEdit(proxy)} className="rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700">
+                    Edit
+                  </button>
+                  <button onClick={() => handleDelete(proxy.id)} className="rounded-xl bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-500">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-700 text-left">
+            <thead className="bg-slate-950/80">
               <tr>
-                <td colSpan="2" className="px-6 py-8 text-center text-slate-400">Loading proxies...</td>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-300">Proxy Host</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-300">Actions</th>
               </tr>
-            ) : proxies.length === 0 ? (
-              <tr>
-                <td colSpan="2" className="px-6 py-8 text-center text-slate-400">No proxy host configured yet.</td>
-              </tr>
-            ) : (
-              proxies.map((proxy) => (
-                <tr key={proxy.id} className="hover:bg-slate-950/50">
-                  <td className="px-6 py-4 text-sm text-slate-200">{proxy.host}</td>
-                  <td className="px-6 py-4 text-sm text-slate-200">
-                    <button type="button" onClick={() => openEdit(proxy)} className="mr-2 rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700">
-                      Edit
-                    </button>
-                    <button type="button" onClick={() => handleDelete(proxy.id)} className="rounded-xl bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-500">
-                      Delete
-                    </button>
-                  </td>
+            </thead>
+            <tbody className="divide-y divide-slate-800">
+              {loading ? (
+                <tr>
+                  <td colSpan="2" className="px-6 py-8 text-center text-slate-400">Loading proxies...</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : proxies.length === 0 ? (
+                <tr>
+                  <td colSpan="2" className="px-6 py-8 text-center text-slate-400">No proxy host configured yet.</td>
+                </tr>
+              ) : (
+                proxies.map((proxy) => (
+                  <tr key={proxy.id} className="hover:bg-slate-950/50">
+                    <td className="px-6 py-4 text-sm text-slate-200">{proxy.host}</td>
+                    <td className="px-6 py-4 text-sm text-slate-200">
+                      <button type="button" onClick={() => openEdit(proxy)} className="mr-2 rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700">
+                        Edit
+                      </button>
+                      <button type="button" onClick={() => handleDelete(proxy.id)} className="rounded-xl bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-500">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <Modal isOpen={modalOpen} title={editId ? 'Edit Proxy Host' : 'Add Proxy Host'} onClose={() => setModalOpen(false)}>
