@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+admin-panel/node_modules/
+
+# Environment files
+.env
+.env.*
+
+# SQLite database
+database.sqlite
+*.sqlite
+*.sqlite3
+
+# Build output
+admin-panel/dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+*.swp
+*.swo
+
+# Misc
+coverage/
