@@ -14,6 +14,11 @@ const allowedOrigins = [
   'https://panel.arenaliveapp.top',
 ];
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Private-Network', 'true');
+  next();
+});
+
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -28,7 +33,7 @@ app.use(
   }),
 );
 
-app.options('*', cors({ origin: allowedOrigins }));
+app.options('*', cors({ origin: allowedOrigins, optionsSuccessStatus: 204 }));
 app.use(express.json());
 app.use('/api', apiRoutes);
 
