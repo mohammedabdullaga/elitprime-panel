@@ -60,7 +60,7 @@ function Layout() {
             <h1 className="text-lg font-semibold">IPTV Admin</h1>
           </div>
           <button
-            className="rounded-md bg-slate-800 px-3 py-2 text-sm"
+            className="rounded-lg bg-slate-800 px-4 py-2 text-base"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle navigation"
           >
@@ -82,7 +82,7 @@ function Layout() {
                     to={item.to}
                     onClick={() => setMobileOpen(false)}
                     className={({ isActive }) =>
-                      `block rounded-xl px-4 py-3 text-sm font-medium transition ${
+                      `block rounded-xl px-4 py-4 text-base font-medium transition ${
                         isActive ? 'bg-accent text-white shadow-soft' : 'text-slate-300 hover:bg-slate-800'
                       }`
                     }

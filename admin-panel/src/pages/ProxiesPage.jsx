@@ -81,11 +81,11 @@ function ProxiesPage() {
                   <div className="text-sm text-slate-400">Proxy Host</div>
                   <div className="mt-1 text-sm text-slate-100 break-words">{proxy.host}</div>
                 </div>
-                <div className="ml-4 flex-shrink-0 flex flex-col gap-2">
-                  <button onClick={() => openEdit(proxy)} className="rounded-xl bg-slate-800 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700">
+                <div className="ml-4 flex-shrink-0 flex flex-col gap-3 w-36 sm:w-auto">
+                  <button onClick={() => openEdit(proxy)} className="w-full sm:w-auto rounded-xl bg-slate-800 px-3 py-3 text-base font-medium text-slate-100 hover:bg-slate-700">
                     Edit
                   </button>
-                  <button onClick={() => handleDelete(proxy.id)} className="rounded-xl bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-500">
+                  <button onClick={() => handleDelete(proxy.id)} className="w-full sm:w-auto rounded-xl bg-red-600 px-3 py-3 text-base font-medium text-white hover:bg-red-500">
                     Delete
                   </button>
                 </div>
@@ -144,11 +144,11 @@ function ProxiesPage() {
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={() => setModalOpen(false)} className="rounded-2xl border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-800">
+          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+            <button type="button" onClick={() => setModalOpen(false)} className="w-full sm:w-auto rounded-2xl border border-slate-700 px-5 py-3 text-base font-semibold text-slate-200 hover:bg-slate-800">
               Cancel
             </button>
-            <button type="submit" className="rounded-2xl bg-accent px-5 py-3 text-sm font-semibold text-white hover:bg-blue-500">
+            <button type="submit" className="w-full sm:w-auto rounded-2xl bg-accent px-5 py-3 text-base font-semibold text-white hover:bg-blue-500">
               Save Proxy Host
             </button>
           </div>
