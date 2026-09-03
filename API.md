@@ -3,7 +3,7 @@
 Public API Base URL:
 
 ```
-https://api.arenaliveapp.top/api
+https://api.dropremax.site/api
 ```
 
 ## Public config endpoint
@@ -15,7 +15,7 @@ This endpoint is the only public API used by the Android app. No authentication 
 Full URL:
 
 ```
-https://api.arenaliveapp.top/api/config
+https://api.dropremax.site/api/config
 ```
 
 ### Response

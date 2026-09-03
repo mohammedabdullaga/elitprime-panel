@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const apiRoutes = require('./routes');
@@ -12,6 +13,11 @@ const allowedOrigins = [
   'http://localhost:5174',
   'http://localhost:5175',
   'https://panel.arenaliveapp.top',
+  'https://api.arenaliveapp.top',
+  'https://panel.dropremax.site',
+  'https://api.dropremax.site',
+  'http://panel.dropremax.site',
+  'http://api.dropremax.site',
 ];
 
 app.use((req, res, next) => {
@@ -39,8 +45,13 @@ app.options('*', cors({
 app.use(express.json());
 app.use('/api', apiRoutes);
 
-app.get('/', (req, res) => {
-  res.send('IPTV config backend is running. Use /api endpoints.');
+app.use(express.static(path.join(__dirname, 'admin-panel/dist')));
+
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api/')) {
+    return next();
+  }
+  res.sendFile(path.join(__dirname, 'admin-panel/dist/index.html'));
 });
 
 app.use((err, req, res, next) => {
