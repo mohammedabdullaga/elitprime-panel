@@ -105,25 +105,17 @@ Git pushes are being made to GitHub, but the repository does not prove that the 
 
 ## Proposed Implementation Plan
 
-### 1. Public APK Download Directory
+### 1. External APK URL
 
-Use a dedicated directory on the VPS, for example:
+The APK is not assumed to be hosted on this backend's filesystem. The admin enters the complete APK URL manually, so the download provider can be changed immediately without a code change or APK upload to this server.
 
-```text
-/var/www/arenalive-downloads/
-```
-
-Configure the existing nginx server block for `api.arenaliveapp.top` with a public `/downloads/` location.
-
-The APK would be available at:
+Example:
 
 ```text
-https://api.arenaliveapp.top/downloads/app-release.apk
+https://some-cdn-or-domain.com/app-release.apk
 ```
 
-nginx should serve the APK directly, while Express should continue serving the JSON config endpoint.
-
-The exact filesystem path should be confirmed from the VPS nginx configuration before implementation.
+The URL is stored in the SQLite `settings` table as `update_download_url` and is returned in the public config only after server-side validation succeeds.
 
 ### 2. Update Metadata Storage
 
@@ -135,6 +127,7 @@ update_version_name
 update_release_notes
 update_force_update
 update_download_url
+update_sha256
 ```
 
 The public config response would expose these values as an `update` object:
@@ -147,35 +140,33 @@ The public config response would expose these values as an `update` object:
     "release_notes": "Performance improvements and bug fixes.",
     "force_update": false,
     "download_url": "https://api.arenaliveapp.top/downloads/app-release.apk",
-    "sha256": "..."
+    "sha256": "64-character-manually-provided-sha256"
   }
 }
 ```
 
-The values can be managed through the existing authenticated admin settings API.
+All values can be edited through the existing authenticated admin settings panel. The panel provides plain text fields for the download URL and SHA-256; it does not upload APK files.
 
 ### 3. SHA-256 Calculation
 
-Because no automated deployment workflow is verified, calculate the APK SHA-256 from the file available on the VPS rather than relying only on a manually generated value.
+Use approach (a): the developer manually provides the APK SHA-256 alongside the URL for each release. This is the correct approach because the backend only receives a remote URL and does not have verified filesystem access to the APK. The developer should compute the hash locally before saving it in the panel.
 
-Recommended approach:
+The backend does not download the complete remote APK to calculate a hash.
 
-- Calculate the hash when the config endpoint needs it.
-- Cache the calculated hash in memory.
-- Check the APK file modification time before reusing the cached hash.
-- Recalculate the hash whenever the APK is replaced.
+The backend validates the configured URL with a `HEAD` request, falling back to a ranged `GET` when necessary. It requires a successful response and one of these content types:
 
-This avoids stale hashes if the APK is uploaded manually or replaced outside git, while avoiding repeated hashing of the APK on every request.
+- `application/vnd.android.package-archive`
+- `application/octet-stream`
+
+Validation results are cached for five minutes and the cache is cleared when the admin changes `update_download_url`.
 
 ### 4. Validation Before Implementation
 
 Before writing code:
 
-1. Inspect the nginx server block on the VPS for `api.arenaliveapp.top`.
-2. Confirm the current frontend root and the best filesystem location for `/downloads/`.
-3. Confirm whether deployment is manual or automated.
-4. Confirm the APK filename and whether the download URL should be versioned.
-5. Confirm the Android app's expected field names and update comparison rules.
-6. Confirm whether release notes should be plain text or an array of strings.
+1. Confirm the external APK host and its actual response `Content-Type`.
+2. Confirm whether the Android app expects `version_code` as an integer and how it compares versions.
+3. Confirm whether release notes should be plain text or an array of strings.
+4. Provide the real SHA-256 generated from the APK release artifact.
 
-Implementation should begin only after these details are approved.
+If URL validation fails, `/api/config` still returns the base configuration but omits `update`, preventing the Android app from receiving a broken download link.

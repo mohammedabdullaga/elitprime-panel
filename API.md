@@ -1,54 +1,24 @@
-# IPTV Config Backend API
+# Android App Public API
 
-Base URL: `http://localhost:3000/api`
+Public API Base URL:
 
-This backend exposes a public config endpoint and authenticated admin endpoints for managing hosts, proxy hosts, and app settings.
-
-## Environment
-
-Set these values in `.env`:
-
-- `ADMIN_USERNAME` - admin username for login
-- `ADMIN_PASSWORD` - admin password for login
-- `JWT_SECRET` - secret used to sign JWT tokens
-- `PORT` - optional backend port (defaults to `3000`)
-
-## Authentication
-
-### POST /login
-
-Authenticate and receive a JWT token.
-
-Request body:
-
-```json
-{
-  "username": "admin",
-  "password": "secret-password"
-}
 ```
-
-Success response:
-
-```json
-{
-  "token": "<jwt-token>"
-}
-```
-
-Use the token in protected requests:
-
-```http
-Authorization: Bearer <jwt-token>
+https://api.arenaliveapp.top/api
 ```
 
 ## Public config endpoint
 
 ### GET /config
 
-Returns the app config used by the Android client.
+This endpoint is the only public API used by the Android app. No authentication is required.
 
-Response example:
+Full URL:
+
+```
+https://api.arenaliveapp.top/api/config
+```
+
+### Response
 
 ```json
 {
@@ -63,17 +33,27 @@ Response example:
     }
   ],
   "proxy_host": "ultrproxy.top",
-  "proxy_hosts": ["ultrproxy.top", "nextproxyurl.com"]
+  "proxy_hosts": ["ultrproxy.top", "nextproxyurl.com"],
+  "update": {
+    "version_code": 12,
+    "version_name": "2.1.0",
+    "release_notes": "Performance improvements and bug fixes.",
+    "force_update": false,
+    "download_url": "https://cdn.example.com/app-release.apk",
+    "sha256": "64-character-manually-provided-sha256"
+  }
 }
 ```
 
-Notes:
+### Notes
 
-- `proxy_host` returns the first proxy host.
+- `hosts` contains the active IPTV hosts returned in priority order.
+- `proxy_host` returns the first proxy host for compatibility.
 - `proxy_hosts` returns all configured proxy hosts.
-- `hosts` are ordered by `priority ASC, id ASC`.
-
-## Hosts Endpoints (Authenticated)
+- `tmdb_api_key` is the TMDB API key used by the app.
+- `update` is included only when the configured download URL responds successfully with an APK or binary content type.
+- `update.download_url` and `update.sha256` are manually managed through the authenticated admin settings panel.
+- `update.sha256` is not calculated by this backend.
 
 ### GET /hosts
 
